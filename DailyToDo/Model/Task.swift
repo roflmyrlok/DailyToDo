@@ -12,7 +12,7 @@ struct Task: Codable {
     var name: String
     var description: String
     var done: Bool
-    
+
     init(name: String, description: String, done: Bool = false) {
         self.id = UUID()
         self.name = name
