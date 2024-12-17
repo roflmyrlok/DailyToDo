@@ -97,9 +97,11 @@ class ViewController: UIViewController {
     }
 
     @objc private func createTaskTapped() {
-        // TODO: Implement navigation to create task screen
-        print("Create Task button tapped")
+        let createTaskVC = CreateTaskViewController()
+        createTaskVC.modalPresentationStyle = .fullScreen
+        present(createTaskVC, animated: true, completion: nil)
     }
+
 }
 
 extension ViewController: UITableViewDataSource {
