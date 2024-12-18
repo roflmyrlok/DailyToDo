@@ -142,4 +142,42 @@ extension ViewController: UITableViewDelegate {
         // TODO: Implement navigation to task details screen
         print("Show details for task: \(selectedTask.name)")
     }
+    func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
+        // Delete
+        let deleteAction = UIContextualAction(style: .destructive, title: "Delete") { [weak self] (_, _, completionHandler) in
+            guard let self = self else { return }
+            let alertController = UIAlertController(
+                title: "Delete Task",
+                message: "Are you sure you want to delete this task?",
+                preferredStyle: .alert
+            )
+            alertController.addAction(UIAlertAction(title: "Cancel", style: .cancel) { _ in
+                completionHandler(false)
+            })
+            alertController.addAction(UIAlertAction(title: "Delete", style: .destructive) { _ in
+                let taskToRemove = self.tasks[indexPath.row]
+                TaskManager.shared.deleteTask(taskToRemove)
+                self.tasks.remove(at: indexPath.row)
+                tableView.deleteRows(at: [indexPath], with: .automatic)
+                completionHandler(true)
+            })
+            self.present(alertController, animated: true, completion: nil)
+        }
+        return UISwipeActionsConfiguration(actions: [deleteAction])
+    }
+    func tableView(_ tableView: UITableView, leadingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
+        // Done/DaDan
+        let completeAction = UIContextualAction(style: .normal, title: "Complete") { [weak self] (_, _, completionHandler) in
+            guard let self = self else { return }
+            var task = self.tasks[indexPath.row]
+            task.done.toggle()
+            TaskManager.shared.updateTask(task)
+            self.tasks[indexPath.row] = task
+            tableView.reloadRows(at: [indexPath], with: .automatic)
+            completionHandler(true)
+        }
+        completeAction.backgroundColor = tasks[indexPath.row].done ? .systemOrange : .systemGreen // green for complete / orange for uncomplete / red for delete
+        completeAction.title = tasks[indexPath.row].done ? "Uncomplete" : "Complete"
+        return UISwipeActionsConfiguration(actions: [completeAction])
+    }
 }
