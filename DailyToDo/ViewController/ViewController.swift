@@ -183,15 +183,14 @@ extension ViewController: UITableViewDelegate {
 
     @objc private func showTaskDetails(_ sender: UIButton) {
         let selectedTask = tasks[sender.tag]
-        let detailsTaskVC = DetailsTaskViewController(task: selectedTask) { [weak self] updatedTask in
+        let detailsTaskVC = DetailsTaskViewController(task: selectedTask) { [weak self] _ in
             self?.loadTasks()
         }
         detailsTaskVC.modalPresentationStyle = .fullScreen
-        present(detailsTaskVC, animated: true, completion: nil)
-        _ = UINavigationController(
-            rootViewController: detailsTaskVC
-        )
+        let navigationController = UINavigationController(rootViewController: detailsTaskVC)
+        present(navigationController, animated: true, completion: nil)
     }
+
     func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
         // Delete
         let deleteAction = UIContextualAction(style: .destructive, title: "Delete") { [weak self] (_, _, completionHandler) in
