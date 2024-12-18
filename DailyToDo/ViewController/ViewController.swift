@@ -129,8 +129,9 @@ class ViewController: UIViewController {
 
     @objc private func createTaskTapped() {
         let createTaskVC = CreateTaskViewController()
-        createTaskVC.modalPresentationStyle = .fullScreen
-        present(createTaskVC, animated: true, completion: nil)
+        let navigationController = UINavigationController(rootViewController: createTaskVC)
+        navigationController.modalPresentationStyle = .fullScreen
+        present(navigationController, animated: true, completion: nil)
     }
 
 }
