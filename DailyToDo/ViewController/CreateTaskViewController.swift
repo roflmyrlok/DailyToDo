@@ -32,7 +32,12 @@ class CreateTaskViewController: UIViewController {
         button.setTitleColor(.white, for: .normal)
         button.layer.cornerRadius = 10
         button.translatesAutoresizingMaskIntoConstraints = false
-        button.addTarget(nil, action: #selector(saveButtonTapped), for: .touchUpInside)
+        button
+            .addTarget(
+                nil,
+                action: #selector(saveButtonTapped),
+                for: .touchUpInside
+            )
         return button
     }()
 
@@ -52,20 +57,35 @@ class CreateTaskViewController: UIViewController {
     }
 
     private func setupConstraints() {
-        NSLayoutConstraint.activate([
-            nameTextField.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 20),
-            nameTextField.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
-            nameTextField.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
+        NSLayoutConstraint.activate(
+[
+            nameTextField.topAnchor
+                .constraint(
+                    equalTo: view.safeAreaLayoutGuide.topAnchor,
+                    constant: 20
+                ),
+            nameTextField.leadingAnchor
+                .constraint(equalTo: view.leadingAnchor, constant: 16),
+            nameTextField.trailingAnchor
+                .constraint(equalTo: view.trailingAnchor, constant: -16),
 
-            descriptionTextField.topAnchor.constraint(equalTo: nameTextField.bottomAnchor, constant: 16),
-            descriptionTextField.leadingAnchor.constraint(equalTo: nameTextField.leadingAnchor),
-            descriptionTextField.trailingAnchor.constraint(equalTo: nameTextField.trailingAnchor),
+            descriptionTextField.topAnchor
+                .constraint(equalTo: nameTextField.bottomAnchor, constant: 16),
+            descriptionTextField.leadingAnchor
+                .constraint(equalTo: nameTextField.leadingAnchor),
+            descriptionTextField.trailingAnchor
+                .constraint(equalTo: nameTextField.trailingAnchor),
 
-            saveButton.topAnchor.constraint(equalTo: descriptionTextField.bottomAnchor, constant: 20),
+            saveButton.topAnchor
+                .constraint(
+                    equalTo: descriptionTextField.bottomAnchor,
+                    constant: 20
+                ),
             saveButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             saveButton.heightAnchor.constraint(equalToConstant: 50),
             saveButton.widthAnchor.constraint(equalToConstant: 150)
-        ])
+]
+        )
     }
 
     @objc private func saveButtonTapped() {

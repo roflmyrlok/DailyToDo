@@ -25,7 +25,12 @@ class ViewController: UIViewController {
         button.setTitleColor(.white, for: .normal)
         button.layer.cornerRadius = 10
         button.translatesAutoresizingMaskIntoConstraints = false
-        button.addTarget(self, action: #selector(createTaskTapped), for: .touchUpInside)
+        button
+            .addTarget(
+                self,
+                action: #selector(createTaskTapped),
+                for: .touchUpInside
+            )
         return button
     }()
 
@@ -56,17 +61,27 @@ class ViewController: UIViewController {
     }
 
     private func setupConstraints() {
-        NSLayoutConstraint.activate([
-            tableView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+        NSLayoutConstraint.activate(
+[
+            tableView.topAnchor
+                .constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
             tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            tableView.bottomAnchor.constraint(equalTo: createTaskButton.topAnchor, constant: -16),
+            tableView.bottomAnchor
+                .constraint(equalTo: createTaskButton.topAnchor, constant: -16),
 
-            createTaskButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
-            createTaskButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
-            createTaskButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -16),
+            createTaskButton.leadingAnchor
+                .constraint(equalTo: view.leadingAnchor, constant: 16),
+            createTaskButton.trailingAnchor
+                .constraint(equalTo: view.trailingAnchor, constant: -16),
+            createTaskButton.bottomAnchor
+                .constraint(
+                    equalTo: view.safeAreaLayoutGuide.bottomAnchor,
+                    constant: -16
+                ),
             createTaskButton.heightAnchor.constraint(equalToConstant: 50)
-        ])
+]
+        )
     }
 
     private func checkFirstLaunch() {
@@ -81,11 +96,27 @@ class ViewController: UIViewController {
 
     private func createExampleTasks() {
         let exampleTasks = [
-            Task(name: "Clean Apartment", description: "Vacuum and do laundry", done: true),
-            Task(name: "Buy Groceries", description: "Milk, bread, eggs, and vegetables"),
-            Task(name: "Workout", description: "30 minutes of cardio at the gym"),
-            Task(name: "Read a Book", description: "Finish the first chapter of the new novel"),
-            Task(name: "Plan Weekend Trip", description: "Research destinations and book accommodation")
+            Task(
+                name: "Clean Apartment",
+                description: "Vacuum and do laundry",
+                done: true
+            ),
+            Task(
+                name: "Buy Groceries",
+                description: "Milk, bread, eggs, and vegetables"
+            ),
+            Task(
+                name: "Workout",
+                description: "30 minutes of cardio at the gym"
+            ),
+            Task(
+                name: "Read a Book",
+                description: "Finish the first chapter of the new novel"
+            ),
+            Task(
+                name: "Plan Weekend Trip",
+                description: "Research destinations and book accommodation"
+            )
         ]
 
         exampleTasks.forEach { TaskManager.shared.addTask($0) }
@@ -110,7 +141,10 @@ extension ViewController: UITableViewDataSource {
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "TaskCell", for: indexPath)
+        let cell = tableView.dequeueReusableCell(
+            withIdentifier: "TaskCell",
+            for: indexPath
+        )
         let task = tasks[indexPath.row]
 
         cell.textLabel?.text = task.name
@@ -118,7 +152,12 @@ extension ViewController: UITableViewDataSource {
 
         let detailsButton = UIButton(type: .detailDisclosure)
         detailsButton.tag = indexPath.row
-        detailsButton.addTarget(self, action: #selector(showTaskDetails(_:)), for: .touchUpInside)
+        detailsButton
+            .addTarget(
+                self,
+                action: #selector(showTaskDetails(_:)),
+                for: .touchUpInside
+            )
         cell.accessoryView = detailsButton
 
         cell.textLabel?.textColor = task.done ? .secondaryLabel : .label
@@ -128,7 +167,11 @@ extension ViewController: UITableViewDataSource {
 }
 
 extension ViewController: UITableViewDelegate {
-    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
+    func tableView(
+        _ tableView: UITableView,
+        commit editingStyle: UITableViewCell.EditingStyle,
+        forRowAt indexPath: IndexPath
+    ) {
         if editingStyle == .delete {
             let taskToRemove = tasks[indexPath.row]
             TaskManager.shared.deleteTask(taskToRemove)
@@ -139,8 +182,14 @@ extension ViewController: UITableViewDelegate {
 
     @objc private func showTaskDetails(_ sender: UIButton) {
         let selectedTask = tasks[sender.tag]
-        // TODO: Implement navigation to task details screen
-        print("Show details for task: \(selectedTask.name)")
+        let detailsTaskVC = DetailsTaskViewController(task: selectedTask) { [weak self] updatedTask in
+            self?.loadTasks()
+        }
+        detailsTaskVC.modalPresentationStyle = .fullScreen
+        present(detailsTaskVC, animated: true, completion: nil)
+        _ = UINavigationController(
+            rootViewController: detailsTaskVC
+        )
     }
     func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
         // Delete
@@ -151,16 +200,22 @@ extension ViewController: UITableViewDelegate {
                 message: "Are you sure you want to delete this task?",
                 preferredStyle: .alert
             )
-            alertController.addAction(UIAlertAction(title: "Cancel", style: .cancel) { _ in
-                completionHandler(false)
-            })
-            alertController.addAction(UIAlertAction(title: "Delete", style: .destructive) { _ in
-                let taskToRemove = self.tasks[indexPath.row]
-                TaskManager.shared.deleteTask(taskToRemove)
-                self.tasks.remove(at: indexPath.row)
-                tableView.deleteRows(at: [indexPath], with: .automatic)
-                completionHandler(true)
-            })
+            alertController
+                .addAction(UIAlertAction(title: "Cancel", style: .cancel) { _ in
+                    completionHandler(false)
+                })
+            alertController
+                .addAction(
+                    UIAlertAction(
+                        title: "Delete",
+                        style: .destructive
+                    ) { _ in
+                        let taskToRemove = self.tasks[indexPath.row]
+                        TaskManager.shared.deleteTask(taskToRemove)
+                        self.tasks.remove(at: indexPath.row)
+                        tableView.deleteRows(at: [indexPath], with: .automatic)
+                        completionHandler(true)
+                    })
             self.present(alertController, animated: true, completion: nil)
         }
         return UISwipeActionsConfiguration(actions: [deleteAction])
