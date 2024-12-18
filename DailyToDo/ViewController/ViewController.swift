@@ -34,7 +34,22 @@ class ViewController: UIViewController {
         return button
     }()
 
-    private var tasks: [Task] = []
+    private lazy var emptyStateLabel: UILabel = {
+        let label = UILabel()
+        label.text = "You have no tasks"
+        label.textColor = .systemGray
+        label.textAlignment = .center
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.font = UIFont.systemFont(ofSize: 18)
+        return label
+    }()
+
+    private var tasks: [Task] = [] {
+        didSet {
+            updateEmptyState()
+        }
+    }
+
     private let firstLaunchKey = "isFirstLaunch"
 
     override func viewDidLoad() {
@@ -58,11 +73,11 @@ class ViewController: UIViewController {
 
         view.addSubview(tableView)
         view.addSubview(createTaskButton)
+        view.addSubview(emptyStateLabel)
     }
 
     private func setupConstraints() {
-        NSLayoutConstraint.activate(
-[
+        NSLayoutConstraint.activate([
             tableView.topAnchor
                 .constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
             tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
@@ -79,9 +94,16 @@ class ViewController: UIViewController {
                     equalTo: view.safeAreaLayoutGuide.bottomAnchor,
                     constant: -16
                 ),
-            createTaskButton.heightAnchor.constraint(equalToConstant: 50)
-]
-        )
+            createTaskButton.heightAnchor.constraint(equalToConstant: 50),
+
+            emptyStateLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            emptyStateLabel.centerYAnchor.constraint(equalTo: view.centerYAnchor)
+        ])
+    }
+
+    private func updateEmptyState() {
+        emptyStateLabel.isHidden = !tasks.isEmpty
+        tableView.isHidden = tasks.isEmpty
     }
 
     private func checkFirstLaunch() {
@@ -133,7 +155,6 @@ class ViewController: UIViewController {
         navigationController.modalPresentationStyle = .fullScreen
         present(navigationController, animated: true, completion: nil)
     }
-
 }
 
 extension ViewController: UITableViewDataSource {
@@ -192,7 +213,7 @@ extension ViewController: UITableViewDelegate {
     }
 
     func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
-        // Delete
+
         let deleteAction = UIContextualAction(style: .destructive, title: "Delete") { [weak self] (_, _, completionHandler) in
             guard let self = self else { return }
             let alertController = UIAlertController(
@@ -220,8 +241,9 @@ extension ViewController: UITableViewDelegate {
         }
         return UISwipeActionsConfiguration(actions: [deleteAction])
     }
+
     func tableView(_ tableView: UITableView, leadingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
-        // Done/DaDan
+
         let completeAction = UIContextualAction(style: .normal, title: "Complete") { [weak self] (_, _, completionHandler) in
             guard let self = self else { return }
             var task = self.tasks[indexPath.row]
@@ -231,7 +253,7 @@ extension ViewController: UITableViewDelegate {
             tableView.reloadRows(at: [indexPath], with: .automatic)
             completionHandler(true)
         }
-        completeAction.backgroundColor = tasks[indexPath.row].done ? .systemOrange : .systemGreen // green for complete / orange for uncomplete / red for delete
+        completeAction.backgroundColor = tasks[indexPath.row].done ? .systemOrange : .systemGreen
         completeAction.title = tasks[indexPath.row].done ? "Uncomplete" : "Complete"
         return UISwipeActionsConfiguration(actions: [completeAction])
     }

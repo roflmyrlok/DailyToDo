@@ -17,6 +17,7 @@ class DetailsTaskViewController: UIViewController {
         label.numberOfLines = 0
         return label
     }()
+
     private lazy var descriptionLabel: UILabel = {
         let label = UILabel()
         label.font = .preferredFont(forTextStyle: .body)
@@ -24,12 +25,14 @@ class DetailsTaskViewController: UIViewController {
         label.numberOfLines = 0
         return label
     }()
+
     private lazy var statusLabel: UILabel = {
         let label = UILabel()
         label.font = .preferredFont(forTextStyle: .subheadline)
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
+
     private lazy var deleteButton: UIButton = {
         var configuration = UIButton.Configuration.filled()
         configuration.baseBackgroundColor = .systemRed
@@ -44,6 +47,7 @@ class DetailsTaskViewController: UIViewController {
             )
         return button
     }()
+
     private lazy var completeButton: UIButton = {
         var configuration = UIButton.Configuration.filled()
         configuration.baseBackgroundColor = .systemGreen
@@ -58,20 +62,24 @@ class DetailsTaskViewController: UIViewController {
             )
         return button
     }()
+
     init(task: Task, onTaskUpdated: @escaping (Task) -> Void) {
         self.task = task
         self.onTaskUpdated = onTaskUpdated
         super.init(nibName: nil, bundle: nil)
     }
+
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
+
     override func viewDidLoad() {
         super.viewDidLoad()
         setupView()
         setupConstraints()
         configureTaskDetails()
     }
+
     private func setupView() {
         view.backgroundColor = .systemBackground
         title = "Task Details"
@@ -86,6 +94,7 @@ class DetailsTaskViewController: UIViewController {
             action: #selector(closeButtonTapped)
         )
     }
+
     private func setupConstraints() {
         NSLayoutConstraint.activate(
 [
@@ -134,20 +143,24 @@ class DetailsTaskViewController: UIViewController {
 ]
         )
     }
+
     private func configureTaskDetails() {
         nameLabel.text = task.name
         descriptionLabel.text = task.description
         updateStatusLabel()
         updateCompleteButtonTitle()
     }
+
     private func updateStatusLabel() {
         statusLabel.text = task.done ? "Status: Completed" : "Status: In Progress"
         statusLabel.textColor = task.done ? .secondaryLabel : .label
     }
+
     private func updateCompleteButtonTitle() {
         completeButton.configuration?.title = task.done ? "Mark as Incomplete" : "Mark as Complete"
         completeButton.configuration?.baseBackgroundColor = task.done ? .systemOrange : .systemGreen
     }
+
     @objc private func deleteButtonTapped() {
         let alertController = UIAlertController(
             title: "Delete Task",
@@ -166,6 +179,7 @@ class DetailsTaskViewController: UIViewController {
                 })
         present(alertController, animated: true)
     }
+
     @objc private func completeButtonTapped() {
         task.done.toggle()
         TaskManager.shared.updateTask(task)
@@ -173,6 +187,7 @@ class DetailsTaskViewController: UIViewController {
         updateCompleteButtonTitle()
         onTaskUpdated(task)
     }
+
     @objc private func closeButtonTapped() {
         dismiss(animated: true)
     }
