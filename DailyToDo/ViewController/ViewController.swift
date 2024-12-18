@@ -163,26 +163,34 @@ extension ViewController: UITableViewDataSource {
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(
-            withIdentifier: "TaskCell",
-            for: indexPath
-        )
+        let cell = tableView.dequeueReusableCell(withIdentifier: "TaskCell", for: indexPath)
         let task = tasks[indexPath.row]
 
         cell.textLabel?.text = task.name
         cell.detailTextLabel?.text = task.description
 
+        if task.done {
+            cell.textLabel?.textColor = .systemGreen
+        } else if let deadline = task.deadline {
+            let now = Date()
+            let timeRemaining = deadline.timeIntervalSince(now)
+            let timeEstimateInSeconds = TimeInterval(task.timeEstimate * 60)
+
+            if deadline < now {
+                cell.textLabel?.textColor = .systemRed
+            } else if timeRemaining <= timeEstimateInSeconds {
+                cell.textLabel?.textColor = .systemOrange
+            } else {
+                cell.textLabel?.textColor = .label
+            }
+        } else {
+            cell.textLabel?.textColor = .label
+        }
+
         let detailsButton = UIButton(type: .detailDisclosure)
         detailsButton.tag = indexPath.row
-        detailsButton
-            .addTarget(
-                self,
-                action: #selector(showTaskDetails(_:)),
-                for: .touchUpInside
-            )
+        detailsButton.addTarget(self, action: #selector(showTaskDetails(_:)), for: .touchUpInside)
         cell.accessoryView = detailsButton
-
-        cell.textLabel?.textColor = task.done ? .secondaryLabel : .label
 
         return cell
     }
