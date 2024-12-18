@@ -58,6 +58,13 @@ class CreateTaskViewController: UIViewController {
         setupView()
         setupConstraints()
         modalPresentationStyle = .fullScreen
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
+            tapGesture.cancelsTouchesInView = true
+            view.addGestureRecognizer(tapGesture)
+    }
+    
+    @objc private func dismissKeyboard() {
+        view.endEditing(true) // remove keyboard after tap in random place
     }
 
     private func setupView() {
