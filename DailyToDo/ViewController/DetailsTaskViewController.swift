@@ -51,7 +51,7 @@ class DetailsTaskViewController: UIViewController {
     private lazy var completeButton: UIButton = {
         var configuration = UIButton.Configuration.filled()
         configuration.baseBackgroundColor = .systemGreen
-        configuration.title = "Mark as Complete"
+        configuration.title = "Complete"
         let button = UIButton(configuration: configuration)
         button.translatesAutoresizingMaskIntoConstraints = false
         button
@@ -157,7 +157,7 @@ class DetailsTaskViewController: UIViewController {
     }
 
     private func updateCompleteButtonTitle() {
-        completeButton.configuration?.title = task.done ? "Mark as Incomplete" : "Mark as Complete"
+        completeButton.configuration?.title = task.done ? "Incomplete" : "Complete"
         completeButton.configuration?.baseBackgroundColor = task.done ? .systemOrange : .systemGreen
     }
 
