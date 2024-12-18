@@ -9,35 +9,33 @@ import XCTest
 
 final class DailyToDoUITests: XCTestCase {
 
+    private var app: XCUIApplication!
+
     override func setUpWithError() throws {
-        // Put setup code here. This method is called before the invocation of each test method in the class.
-
-        // In UI tests it is usually best to stop immediately when a failure occurs.
         continueAfterFailure = false
-
-        // In UI tests it’s important to set the initial state - such as interface orientation - required for your tests before they run. The setUp method is a good place to do this.
-    }
-
-    override func tearDownWithError() throws {
-        // Put teardown code here. This method is called after the invocation of each test method in the class.
-    }
-
-    @MainActor
-    func testExample() throws {
-        // UI tests must launch the application that they test.
-        let app = XCUIApplication()
+        app = XCUIApplication()
         app.launch()
-
-        // Use XCTAssert and related functions to verify your tests produce the correct results.
     }
 
-    @MainActor
-    func testLaunchPerformance() throws {
-        if #available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 7.0, *) {
-            // This measures how long it takes to launch your application.
-            measure(metrics: [XCTApplicationLaunchMetric()]) {
-                XCUIApplication().launch()
-            }
-        }
+    func testCreateNewTaskButtonExists() throws {
+        let createTaskButton = app.buttons["Create New Task"]
+        XCTAssertTrue(createTaskButton.exists, "Create New Task button should be visible on the screen")
+    }
+
+    func testEmptyStateHidesWhenTasksArePresent() throws {
+
+        let tableView = app.tables.firstMatch
+        XCTAssertTrue(tableView.exists, "TableView should be visible when there are tasks")
+        
+        let emptyStateLabel = app.staticTexts["You have no tasks"]
+        XCTAssertFalse(emptyStateLabel.exists, "Empty state label should be hidden when there are tasks")
+    }
+
+    func testTaskListShowsCorrectNumberOfTasks() throws {
+        let tableView = app.tables.firstMatch
+        XCTAssertTrue(tableView.exists, "TableView should be visible")
+
+        let cellCount = tableView.cells.count
+        XCTAssertGreaterThan(cellCount, 0, "TableView should have at least one task")
     }
 }
