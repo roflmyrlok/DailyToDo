@@ -241,7 +241,6 @@ extension ViewController: UITableViewDelegate {
         }
         return UISwipeActionsConfiguration(actions: [deleteAction])
     }
-
     func tableView(_ tableView: UITableView, leadingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
 
         let completeAction = UIContextualAction(style: .normal, title: "Complete") { [weak self] (_, _, completionHandler) in

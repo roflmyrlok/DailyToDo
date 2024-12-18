@@ -12,11 +12,15 @@ struct Task: Codable {
     var name: String
     var description: String
     var done: Bool
+    var timeEstimate: Int
+    var deadline: Date?
 
-    init(name: String, description: String, done: Bool = false) {
+    init(name: String, description: String, done: Bool = false, timeEstimate: Int = 0, deadline: Date? = nil) {
         self.id = UUID()
         self.name = name
         self.description = description
         self.done = done
+        self.timeEstimate = timeEstimate
+        self.deadline = deadline
     }
 }
