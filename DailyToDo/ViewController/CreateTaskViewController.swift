@@ -54,6 +54,14 @@ class CreateTaskViewController: UIViewController {
         view.addSubview(nameTextField)
         view.addSubview(descriptionTextField)
         view.addSubview(saveButton)
+        navigationItem.rightBarButtonItem = UIBarButtonItem(
+                barButtonSystemItem: .cancel,
+                target: self,
+                action: #selector(cancelButtonTapped)
+            )
+    }
+    @objc private func cancelButtonTapped() {
+        dismiss(animated: true, completion: nil)
     }
 
     private func setupConstraints() {
